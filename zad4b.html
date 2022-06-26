@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+    <h1>Koch petal in canvas by Jakub Muzyka</h1>
+
+    <button type="button" onclick="increaseKochDegree()">zwiększ liczbę iteracji</button>
+    <button type="button" onclick="decreaseKochDegree()">zmniejsz liczbę iteracji</button>
+    <p id="nkat"></p>
+
+    <canvas id="KochCanvas" width="800" height="600" style="border: 1px solid #564b47"></canvas>
+
+<script>
+    
+    var canvas = document.getElementById('KochCanvas');
+    var ctx = canvas.getContext('2d');
+    var x = canvas.width / 4;
+    var y = canvas.height / 4;
+    var AngleInRadians = 0;
+    var pen = 0;
+    var iteracja = 4;
+
+        // ===============
+        // turtle graphics
+        // ===============
+
+        function penup() {
+            pen = 0;
+        };
+
+        function pendown() {
+            pen = 1;
+        };
+
+        function forward(distance) {
+            var minx = x;
+            var miny = y;
+
+            x -= distance * Math.sin(AngleInRadians);
+            y += distance * Math.cos(AngleInRadians);
+
+            if (pen === 1) {
+                ctx.beginPath();
+                ctx.moveTo(minx, miny);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+            }
+        };
+
+        function left(angleInDegrees) {
+            AngleInRadians += angleInDegrees * Math.PI / 180;
+        };
+
+        function right(angleInDegrees) {
+            left(-angleInDegrees);
+        };
+
+        function backward(distance) {
+            left(180);
+            forward(-distance);
+            left(180);
+        };
+
+// ============================================
+    
+    function Koch(distance, iteracja) {
+        if (iteracja == 1) {
+            forward(distance);
+        }
+         else
+        {
+            var d = distance/3;
+            Koch(d,iteracja-1);
+            
+            right(60);
+            Koch(d,iteracja-1);
+            left(120);
+            Koch(d, iteracja-1);
+            right(60);
+            Koch(d,iteracja-1);
+            
+        }
+        };
+
+
+    function drawKoch(distance) {
+        var d = distance/3;
+        for (var i=0; i<3; i++) {
+            Koch(d,iteracja);
+            left(120); 
+        }
+    };
+    x = 300;
+    y = 300;
+    pendown();
+    drawKoch(600);
+
+    function increaseKochDegree() {
+        iteracja++;
+        x = 300;
+        y = 300;
+        AngleInRadians = 0;
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        drawKoch(600);
+};
+        	    
+    function decreaseKochDegree() {
+        if (iteracja > 1){
+            iteracja--;
+            x = 300;
+            y = 300;
+            AngleInRadians = 0;
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            drawKoch(600);
+        }
+        
+    };
+    
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+    <h1>Sierpiński triangle in canvas by Jakub Muzyka</h1>
+
+    <button type="button" onclick="increaseSierpinskiDegree()">zwiększ liczbę iteracji</button>
+    <button type="button" onclick="decreaseSierpinskiDegree()">zmniejsz liczbę iteracji</button>
+    <p id="nkat"></p>
+
+    <canvas id="sierpinskiCanvas" width="800" height="600" style="border: 1px solid #564b47"></canvas>
+
+    <script>
+
+        var canvas = document.getElementById('sierpinskiCanvas');
+        var ctx = canvas.getContext('2d');
+        var x = canvas.width / 4;
+        var y = canvas.height / 4;
+        var AngleInRadians = 0;
+        var pen = 0;
+        var iteracja = 4;
+
+        // ===============
+        // turtle graphics
+        // ===============
+
+        function penup() {
+            pen = 0;
+        };
+
+        function pendown() {
+            pen = 1;
+        };
+
+        function forward(distance) {
+            var minx = x;
+            var miny = y;
+
+            x -= distance * Math.sin(AngleInRadians);
+            y += distance * Math.cos(AngleInRadians);
+
+            if (pen === 1) {
+                ctx.beginPath();
+                ctx.moveTo(minx, miny);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+            }
+        };
+
+        function left(angleInDegrees) {
+            AngleInRadians += angleInDegrees * Math.PI / 180;
+        };
+
+        function right(angleInDegrees) {
+            left(-angleInDegrees);
+        };
+
+        function backward(distance) {
+            left(180);
+            forward(distance);
+            left(180);
+        };
+        
+// ===================================================================================
+
+        function sierpinski(distance, iteracja) {
+            var i;
+            if (iteracja === 1) {
+                for (i = 0; i < 3; i++) {
+                    forward(distance);
+                    left(120);
+            }
+            } else {
+                sierpinski(distance/2, iteracja-1);
+                forward(distance/2);
+                sierpinski(distance/2,iteracja-1);
+                backward(distance/2);
+                left(60);
+                forward(distance/2);
+                right(60);
+                sierpinski(distance/2, iteracja-1);
+                left(60);
+                backward(distance/2);
+                right(60);
+            }    
+        };
+        x = 600;
+        y = 300;
+        pendown();
+        sierpinski(200,3);
+
+        function increaseSierpinskiDegree() {
+                iteracja++;
+                x = 600;
+                y = 300;
+                AngleInRadians = 0;
+                ctx.clearRect(0,0,canvas.width,canvas.height);
+                sierpinski(200, iteracja);
+        };
+        	    
+        function decreaseSierpinskiDegree() {
+            if (iteracja > 1){
+                iteracja--;
+                x = 600;
+                y = 300;
+                AngleInRadians = 0;
+                ctx.clearRect(0,0,canvas.width,canvas.height);
+                sierpinski(200, iteracja);
+            }
+            
+        };
+
+</script>
+</body>
+
+</html>

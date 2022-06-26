@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=utf-8 />
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=4wWXNfnPScg4KdIF5rBHirymxhc0XICAt69pyniJ1etNSHS6Pwh2fmAgDKx-uGbQkoMXIQYIhD4bzv0JsQe35FS0PxzAGNXHZvi3LddUQ8dwcr0dgdVSPQvAg3f92J3hJRQAkQB95CD9x7V1JC8MCQ" charset="UTF-8"></script></head>
+
+<body>
+
+    <h1>regular polygons in canvas by Jakub Muzyka</h1>
+    
+    <button type="button" onclick="increasePolygonDegree()">zwiększ liczbę kątów</button>
+    <button type="button" onclick="decreasePolygonDegree()">zmniejsz liczbę kątów</button>
+    <p id="nkat"></p>
+
+    <canvas id="turtle_graphs" width="800" height="600" style="border: 1px solid #564b47"></canvas>
+
+    <script>
+    
+        var canvas = document.getElementById('turtle_graphs');
+        var ctx = canvas.getContext('2d');
+        var x = canvas.width / 4;
+        var y = canvas.height / 4;
+        var AngleInRadians = 0;
+        var pen = 0;
+        var currentDegree = 4;
+        var coordinates = [];
+
+        // ===============
+        // turtle graphics
+        // ===============
+
+        class Coordinates {
+            constructor(x, y) {
+            this.x = x;
+            this.y = y;
+            }
+        }
+
+        function penup() {
+            pen = 0;
+        };
+
+        function pendown() {
+            pen = 1;
+        };
+
+        function forward(distance) {
+            var minx = x;
+            var miny = y;
+
+            x -= distance * Math.sin(AngleInRadians);
+            y += distance * Math.cos(AngleInRadians);
+
+            if (pen === 1) {
+                ctx.beginPath();
+                ctx.moveTo(minx, miny);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+            }
+        };
+
+        function left(angleInDegrees) {
+            AngleInRadians += angleInDegrees * Math.PI / 180;
+        };
+
+        function right(angleInDegrees) {
+            left(-angleInDegrees);
+        };
+
+        // ==========
+        // Wielokąt 
+        // ==========
+
+        function drawPolygon(distance, n) {
+            var i;
+            for (i = 1; i <= n; i++) {
+                coordinates.push(new Coordinates(x,y));
+                forward(distance);
+                left(360 / n);
+            }
+            drawDiagonals();
+        };
+
+        function drawDiagonals() {
+            coordinates.forEach(
+                positon => {
+                    x = positon.x;
+                    y = positon.y;
+                    var i;
+                    for(i = 0; i < coordinates.length; i++) {
+                        pendown();
+                        ctx.beginPath();
+                        ctx.moveTo(x, y);
+                        ctx.lineTo(coordinates[i].x, coordinates[i].y);
+                        ctx.stroke();
+                    }
+                }
+            )
+        }
+
+
+        function increasePolygonDegree() {
+                clearCanvas();
+                currentDegree++;
+                drawPolygon(100, currentDegree);
+        }
+        	    
+        function decreasePolygonDegree() {
+            if (currentDegree > 2) {
+                clearCanvas();
+                currentDegree--;
+                drawPolygon(100, currentDegree);
+            }
+            else if(currentDegree == 2) {
+                clearCanvas();
+                currentDegree--;
+                ctx.fillStyle = 'red';
+                ctx.fillRect(x,y,5,5);
+            }
+        }
+
+        function clearCanvas() {
+            coordinates = []
+            x = 600;
+            y = 300;
+            AngleInRadians = 0;
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+        }
+
+        x = 600;
+        y = 300;
+        pendown();
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 5;
+        drawPolygon(100, currentDegree);
+
+
+    </script>
+</body>
+
+</html>

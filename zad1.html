@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=utf-8 />
+</head>
+
+<body>
+
+    <h1>turtle graphics in canvas by Jakub Muzyka</h1>
+    <canvas id="turtle_graphs" width="800" height="600" style="border: 1px solid #564b47"></canvas>
+
+    <script>
+
+        var canvas = document.getElementById('turtle_graphs');
+        var ctx = canvas.getContext('2d');
+        var x = canvas.width / 4;
+        var y = canvas.height / 4;
+        var AngleInRadians = 0;
+        var pen = 0;
+
+        // ===============
+        // turtle graphics
+        // ===============
+
+        function penup() {
+            pen = 0;
+        };
+
+        function pendown() {
+            pen = 1;
+        };
+
+        function forward(distance) {
+            var minx = x;
+            var miny = y;
+
+            x -= distance * Math.sin(AngleInRadians);
+            y += distance * Math.cos(AngleInRadians);
+
+            if (pen === 1) {
+                ctx.beginPath();
+                ctx.moveTo(minx, miny);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+            }
+        };
+
+        function left(angleInDegrees) {
+            AngleInRadians += angleInDegrees * Math.PI / 180;
+        };
+
+        function right(angleInDegrees) {
+            left(-angleInDegrees);
+        };
+
+
+        // ============
+        // Examples
+        // ============
+
+        // Arrow 
+        function Arrow() {
+            forward(50);
+            left(90);
+            forward(15);
+            right(110);
+            forward(50);
+            right(130);
+            forward(52);
+            right(120);
+            forward(15);
+            left(90);
+            forward(52);
+            right(90);
+            forward(15);
+        }
+        pendown();
+        ctx.strokeStyle = "green";
+        ctx.lineWidth = 2;
+        Arrow();
+
+        // Octagon 
+        function Octagon(distance) {
+            var i;
+            for (i = 1; i <= 8; i++) {
+                forward(distance);
+                left(45);
+            }
+        };
+        x = 200;
+        y = 500;
+        pendown();
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 5;
+        Octagon(50);
+
+
+        // Square
+        function Square(distance) {
+            var i;
+            for (i = 1; i <= 4; i++) {
+                forward(distance);
+                left(90);
+
+            }
+        };
+        x = 600;
+        y = 250;
+        pendown();
+        ctx.strokeStyle = "blue";
+        ctx.lineWidth = 3;
+        Square(100);
+
+        // Triangle
+        function Triangle(distance) {
+            var i;
+            for (i = 1; i <= 3; i++) {
+                forward(distance);
+                left(120);
+            }
+        };
+        x = 600;
+        y = 500;
+        pendown();
+        ctx.strokeStyle = "yellow";
+        ctx.lineWidth = 3;
+        Triangle(150);
+
+    </script>
+</body>
+
+</html>

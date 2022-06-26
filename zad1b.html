@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8"> 
+</head>
+
+<body>
+    <h1>Console logs for turtle graphics</h1>
+    <textarea id="code" cols="40" rows="5">
+    
+        
+    </textarea>
+<button type="button" onclick="process_instruction()">Run</button>
+<canvas id="turtle_graphs" width="800" height="600" style="border: 1px solid #564b47"></canvas>
+
+<script>
+    var canvas = document.getElementById('turtle_graphs');
+    var ctx = canvas.getContext('2d');
+    var x = canvas.width / 4;
+    var y = canvas.height / 4;
+    var AngleInRadians = 0;
+    var pen = 0;
+
+    // ===============
+    // turtle graphics
+    // ===============
+
+    function penup() {
+        pen = 0;
+    };
+
+    function pendown() {
+        pen = 1;
+    };
+
+    function forward(distance) {
+        var minx = x;
+        var miny = y;
+
+        x -= distance * Math.sin(AngleInRadians);
+        y += distance * Math.cos(AngleInRadians);
+
+        if (pen === 1) {
+            ctx.beginPath();
+            ctx.moveTo(minx, miny);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+        }
+    };
+
+    function left(angleInDegrees) {
+        AngleInRadians += angleInDegrees * Math.PI / 180;
+    };
+
+    function right(angleInDegrees) {
+        left(-angleInDegrees);
+    };
+
+    function process_instruction () {
+        ctx.clearRect(0,0,canvas.width, canvas.height);
+        x = canvas.width / 4;
+        y = canvas.height / 4;
+        AngleInRadians = 0;
+        pen = 0;
+        pendown();
+        var instruction = document.getElementById('code').value;
+        let commands = instruction.split(/[\s, ]+/);
+        console.log(commands);
+        for (let i=1; i < commands.length; i++) {
+            if (commands[i - 1] === 'fd') {
+                forward(parseInt(commands[i]));
+            }
+            if (commands[i - 1] === 'rt') {
+                right(parseInt(commands[i]));
+            }
+            if (commands[i - 1] === 'lt') {
+                left(parseInt(commands[i]));
+            }
+        }
+
+    };
+
+
+</script>
+</body>
+</html>
+
+  
+  
